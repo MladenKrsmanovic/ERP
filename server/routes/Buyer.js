@@ -2,9 +2,10 @@ const express=require('express')
 const router=express.Router()
 const {Buyer}=require('../models');
 const bcrypt = require("bcrypt");
+const { sign } = require("jsonwebtoken");
+const { validateToken } = require("../middlewares/AuthMiddleware");
 
-
-  router.get("/", async (req, res) => {
+  router.get("/",validateToken ,async (req, res) => {
     const listOfBuyers = await Buyer.findAll();
     res.json(listOfBuyers);
  
@@ -54,7 +55,12 @@ router.post("/login", async (req, res) => {
   bcrypt.compare(password, buyer.password).then((match) => {
     if (!match) res.json({ error: "Wrong email And Password Combination" });
 
-    res.json("YOU LOGGED IN!!!");
+    const accessToken = sign(
+      { email: buyer.email, id: buyer.id },
+      "importantsecret"
+    );
+
+    res.json(accessToken);
   });
 });
 
@@ -78,6 +84,27 @@ router.delete('/:id', async (req, res) => {
     await buyer.destroy();
     res.json({ message: 'Buyer deleted successfully' });
   }
+});
+
+router.get("/auth", validateToken, (req, res) => {
+  res.json(req.buyer);
+});
+
+router.patch("/changepassword", validateToken, async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+  const user = await Buyer.findOne({ where: { email: req.buyer.email } });
+
+  bcrypt.compare(oldPassword, buyer.password).then(async (match) => {
+    if (!match) res.json({ error: "Wrong Password Entered!" });
+
+    bcrypt.hash(newPassword, 10).then((hash) => {
+      Buyer.update(
+        { password: hash },
+        { where: { email: req.buyer.email } }
+      );
+      res.json("SUCCESS");
+    });
+  });
 });
 
 module.exports=router

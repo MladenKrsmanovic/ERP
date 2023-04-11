@@ -1,6 +1,7 @@
 const express=require('express')
 const router=express.Router()
 const {CartItem}=require('../models');
+const { validateToken } = require("../middlewares/AuthMiddleware");
 
 router.get("/", async (req, res) => {
     const listOfCartItems = await CartItem.findAll();
@@ -33,7 +34,7 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',validateToken ,async (req, res) => {
   const id = req.params.id;
   const cartitem = await CartItem.findByPk(id);
   if (!cartitem) {

@@ -1,8 +1,9 @@
 const express=require('express')
 const router=express.Router()
 const {Transaction}=require('../models');
+const { requireAdmin } = require("../middlewares/AuthorMiddleware");
 
-router.get("/", async (req, res) => {
+router.get("/",requireAdmin, async (req, res) => {
     const listOfTransactions = await Transaction.findAll();
     res.json(listOfTransactions);
  
