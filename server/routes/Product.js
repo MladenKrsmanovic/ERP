@@ -3,7 +3,7 @@ const router=express.Router()
 const {Product}=require('../models');
 const { validateToken } = require("../middlewares/AuthMiddleware");
 
-router.get("/", async (req, res) => {
+router.get("/",validateToken, async (req, res) => {
     const listOfProducts = await Product.findAll();
     res.json(listOfProducts);
  
@@ -15,7 +15,7 @@ router.get("/byId/:id",async(req,res)=>{
     res.json(product);
 })
 
-router.post("/",validateToken,async(req,res)=>{
+router.post("/",async(req,res)=>{
 
   const product=req.body
   await Product.create(product);
