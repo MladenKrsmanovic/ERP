@@ -3,7 +3,7 @@ const router=express.Router()
 const {Manufacturer}=require('../models');
 const { requireAdmin } = require("../middlewares/AuthorMiddleware");
 
-router.get("/",requireAdmin,async (req, res) => {
+router.get("/",async (req, res) => {
     const listOfManus = await Manufacturer.findAll();
     res.json(listOfManus);
  

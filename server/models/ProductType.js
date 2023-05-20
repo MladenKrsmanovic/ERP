@@ -14,7 +14,8 @@ module.exports=(sequelize,DataTypes)=>{
 
     ProductType.associate=(models)=>{
         ProductType.hasMany(models.Product,{
-            
+            foreignKey: 'ProductTypeId',
+            onDelete: "cascade",
         });
       };
 

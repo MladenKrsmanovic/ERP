@@ -29,6 +29,9 @@ app.use("/transactions",transactionRouter)
 const cartitemRouter=require('./routes/CartItem')
 app.use("/cartitems",cartitemRouter)
 
+const stripeRouter=require('./routes/Stripe')
+app.use("/stripe",stripeRouter)
+
 
 db.sequelize.sync().then(()=>{
     app.listen(3001,()=>{

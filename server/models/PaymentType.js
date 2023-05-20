@@ -13,7 +13,7 @@ module.exports=(sequelize,DataTypes)=>{
     });
     PaymentType.associate=(models)=>{
         PaymentType.hasOne(models.Cart,{
-            
+            foreignKey: 'PaymentTypeId',
         });
       };
 

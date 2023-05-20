@@ -19,5 +19,12 @@ module.exports=(sequelize,DataTypes)=>{
         
     })
 
+    Deliverie.associate = (models) => {
+        Deliverie.belongsTo(models.Cart, {
+          foreignKey: 'CartId'
+          
+        });
+      };
+
     return Deliverie
 }

@@ -1,0 +1,153 @@
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Link, useParams } from "react-router-dom";
+
+function AdminHome() {
+  const { id } = useParams();
+  const [products, setProducts] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [buyerData, setBuyerData] = useState(null);
+  const [showProfileForm, setShowProfileForm] = useState(false);
+
+  useEffect(() => {
+    fetchProducts();
+    fetchBuyerData();
+  }, [currentPage, searchQuery]);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(
+        `/products?keyword=${searchQuery}&page=${currentPage}&limit=10`
+      );
+      setProducts(response.data.products);
+      setTotalPages(response.data.totalPages);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  const fetchBuyerData = async () => {
+    try {
+      const response = await axios.get(`/buyers/byId/${id}`);
+      setBuyerData(response.data);
+    } catch (error) {
+      console.error("Error fetching buyer data:", error);
+    }
+  };
+
+  const handleSearch = async () => {
+    setCurrentPage(1);
+    fetchProducts();
+  };
+
+  const handleInputChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handleProfileClick = () => {
+    setShowProfileForm(!showProfileForm);
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      await axios.delete(`/buyers/${id}`);
+      // Redirect to the home page after deleting the account
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error deleting account:", error);
+    }
+  };
+
+  return (
+    <div>
+      <nav>
+        <div className="logo">
+          <a href="/">Logo</a>
+        </div>
+        <div className="search">
+          <input
+            type="text"
+            placeholder="Search Products..."
+            value={searchQuery}
+            onChange={handleInputChange}
+          />
+          <button type="button" onClick={handleSearch}>
+            Search
+          </button>
+        </div>
+        <div className="login-cart">
+        <Link to={`/login/buyers/${id}/admin/dashboard`}>
+            <button type="button">Dashboard</button>
+          </Link>
+          <Link to="/">
+            <button type="button">Logout</button>
+          </Link>
+          <button type="button">Cart</button>
+          <button type="button" onClick={handleProfileClick}>
+            Profile
+          </button>
+        </div>
+      </nav>
+
+      {showProfileForm && buyerData && (
+        <div className="profile-form">
+          <button className="close-button" onClick={handleProfileClick}>
+            X
+          </button>
+          <h2>Buyer Profile</h2>
+          <p>Name: {buyerData.name}</p>
+          <p>Surname: {buyerData.surname}</p>
+          <p>Email: {buyerData.email}</p>
+          <p>Is Admin: {buyerData.is_admin ? "Yes" : "No"}</p>
+          <button onClick={handleDeleteAccount}>Delete Account</button>
+        </div>
+      )}
+
+      <div className="products">
+        {products.map((product) => (
+          <div className="product" key={product.id}>
+            <div className="product-image">
+              <img src={product.image} alt={product.name} />
+            </div>
+            <div className="product-name">{product.name}</div>
+            <div className="product-price">${product.price}</div>
+            <div className="product-buttons">
+              <Link to={`/products/${product.id}`}>
+                <button type="button">Details</button>
+              </Link>
+              <button type="button">Add to cart</button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="pagination">
+        <button type="button" onClick={handlePreviousPage}>
+          Previous
+        </button>
+        <span>
+          Page {currentPage} of {totalPages}
+        </span>
+        <button type="button" onClick={handleNextPage}>
+          Next
+        </button>
+      </div>
+    </div>
+  );
+}
+
+export default AdminHome;

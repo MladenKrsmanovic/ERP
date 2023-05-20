@@ -35,7 +35,7 @@ module.exports=(sequelize,DataTypes)=>{
     });
     Buyer.associate=(models)=>{
         Buyer.hasOne(models.Cart,{
-            
+            foreignKey: 'BuyerId', 
         });
       };
 

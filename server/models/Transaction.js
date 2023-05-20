@@ -19,5 +19,19 @@ module.exports=(sequelize,DataTypes)=>{
         
     })
 
+    Transaction.associate = (models) => {
+        Transaction.belongsTo(models.TransactionStatus, {
+          foreignKey: 'TransactionStatusId',
+          onDelete: 'CASCADE',
+        });
+      
+
+     
+        Transaction.belongsTo(models.Cart, {
+          foreignKey: 'CartId'
+          
+        });
+      };
+
     return Transaction
 }

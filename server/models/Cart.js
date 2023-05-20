@@ -17,19 +17,34 @@ module.exports=(sequelize,DataTypes)=>{
 
     Cart.associate=(models)=>{
         Cart.hasOne(models.Deliverie,{
-            
+          foreignKey: 'CartId'
         });
-      };
+      
 
-      Cart.associate=(models)=>{
+      
         Cart.hasMany(models.CartItem,{
+          foreignKey: 'CartId',
             onDelete: "cascade",
         });
-      };
+      
 
-      Cart.associate=(models)=>{
+     
         Cart.hasOne(models.Transaction,{
-            
+          foreignKey: 'CartId'
+        });
+      
+
+     
+        Cart.belongsTo(models.PaymentType, {
+          foreignKey: 'PaymentTypeId',
+          onDelete: 'CASCADE',
+        });
+      
+
+     
+        Cart.belongsTo(models.Buyer, {
+          foreignKey: 'BuyerId'
+          
         });
       };
 

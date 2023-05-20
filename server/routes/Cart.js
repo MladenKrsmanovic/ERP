@@ -45,5 +45,16 @@ router.delete('/:id', async (req, res) => {
   }
 });
 
+router.get("/byBuyerId/:BuyerId", async (req, res) => {
+  const buyerId = req.params.BuyerId;
+
+  try {
+    const cart = await Cart.findOne({ where: { BuyerId: buyerId } });
+    res.json(cart);
+  } catch (error) {
+    console.error("Error fetching cart by buyer ID:", error);
+    res.status(500).json({ error: "Failed to fetch cart by buyer ID" });
+  }
+});
 
 module.exports=router

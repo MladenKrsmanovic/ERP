@@ -4,8 +4,9 @@ const {Buyer}=require('../models');
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
 const { validateToken } = require("../middlewares/AuthMiddleware");
+const {requireAdmin}=require("../middlewares/AuthorMiddleware");
 
-  router.get("/",validateToken ,async (req, res) => {
+  router.get("/", async (req, res) => {
     const listOfBuyers = await Buyer.findAll();
     res.json(listOfBuyers);
  
@@ -60,7 +61,7 @@ router.post("/login", async (req, res) => {
       "importantsecret"
     );
 
-    res.json(accessToken);
+    res.json({ accessToken: accessToken, isAdmin: buyer.is_admin });
   });
 });
 

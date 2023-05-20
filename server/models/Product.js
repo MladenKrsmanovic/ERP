@@ -21,6 +21,10 @@ module.exports=(sequelize,DataTypes)=>{
             type:DataTypes.STRING,
             allowNull:true
         },
+        image: {
+            type:DataTypes.STRING,
+            allowNull:true
+        },
         
             
         
@@ -28,8 +32,32 @@ module.exports=(sequelize,DataTypes)=>{
 
     Product.associate=(models)=>{
         Product.hasMany(models.CartItem,{
+            foreignKey: 'ProductId',
             onDelete: "cascade",
         });
+      
+
+      
+        Product.belongsTo(models.Manufacturer, {
+          foreignKey: 'ManufacturerId',
+          onDelete: 'CASCADE',
+        });
+      
+
+      
+        Product.belongsTo(models.ProductStatus, {
+          foreignKey: 'ProductStatusId',
+          onDelete: 'CASCADE',
+        });
+      
+
+    
+        Product.belongsTo(models.ProductType, {
+          foreignKey: 'ProductTypeId',
+          onDelete: 'CASCADE',
+        });
+      
+
       };
 
     return Product

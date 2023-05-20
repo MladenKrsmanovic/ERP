@@ -14,7 +14,7 @@ module.exports=(sequelize,DataTypes)=>{
 
     TransactionStatus.associate=(models)=>{
         TransactionStatus.hasMany(models.Transaction,{
-            
+            foreignKey: 'TransactionStatusId',
         });
       };
 

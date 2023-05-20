@@ -2,6 +2,7 @@ const express=require('express')
 const router=express.Router()
 const {CartItem}=require('../models');
 const { validateToken } = require("../middlewares/AuthMiddleware");
+const {Product}=require('../models')
 
 router.get("/", async (req, res) => {
     const listOfCartItems = await CartItem.findAll();
@@ -42,6 +43,18 @@ router.delete('/:id',validateToken ,async (req, res) => {
   } else {
     await cartitem.destroy();
     res.json({ message: 'Cartitem deleted successfully' });
+  }
+});
+
+router.get("/byCartId/:CartId", async (req, res) => {
+  const cartId = req.params.CartId;
+
+  try {
+    const cartItems = await CartItem.findAll({ where: { CartId: cartId } });
+    res.json(cartItems);
+  } catch (error) {
+    console.error("Error fetching cart items by Cart ID:", error);
+    res.status(500).json({ error: "Failed to fetch cart items by Cart ID" });
   }
 });
 
