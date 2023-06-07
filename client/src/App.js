@@ -36,7 +36,7 @@ function App() {
            <Route path="/login/buyers/:id/admin/dashboard" element={<Dashboard/>}/>
            <Route path="/success" element={<Success/>}/>
            <Route path="/cancel" element={<Cancel/>}/>
-           <Route path="/login/cart/:id" element={<Cart/>}/>
+           <Route path="/login/buyers/:id/cart" element={<Cart/>}/>
           </Routes>
 
 

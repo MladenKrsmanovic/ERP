@@ -64,8 +64,9 @@ function Home() {
          <Link to="/login"> 
            <button type="button">Login</button>
          </Link>
-           
+         <Link to="/login">
            <button type="button">Cart</button>
+           </Link>
           
         </div>
       </nav>
@@ -82,7 +83,9 @@ function Home() {
               <Link to={`/products/${product.id}`}>
                 <button type="button">Details</button>
               </Link>
+              <Link to="/login">
               <button type="button">Add to cart</button>
+              </Link>
             </div>
           </div>
         ))}

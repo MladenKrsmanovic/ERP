@@ -72,6 +72,38 @@ function AdminHome() {
     }
   };
 
+  const handleAddToCart = async (productId) => {
+    try {
+      // Check if a cart exists for the buyer
+      const response = await axios.get(`/carts/byBuyerId/${id}`);
+      let cartId;
+
+      if (response.data) {
+        // If a cart exists, use its cartId
+        cartId = response.data.id;
+      } else {
+        // If a cart doesn't exist, create a new cart for the buyer
+        const createCartResponse = await axios.post(`/carts`, {
+          BuyerId: id,
+          PaymentTypeId: 1,
+        });
+        cartId = createCartResponse.data.id;
+      }
+
+      // Add the product to the cart
+      await axios.post(`/cartitems`, {
+        amount: 1,
+        CartId: cartId,
+        ProductId: productId,
+      });
+
+      // Show a success message or perform any other necessary actions
+      console.log("Product added to cart successfully!");
+    } catch (error) {
+      console.error("Error adding product to cart:", error);
+    }
+  };
+
   return (
     <div>
       <nav>
@@ -96,7 +128,9 @@ function AdminHome() {
           <Link to="/">
             <button type="button">Logout</button>
           </Link>
+          <Link to={`/login/buyers/${id}/cart`}>
           <button type="button">Cart</button>
+          </Link>
           <button type="button" onClick={handleProfileClick}>
             Profile
           </button>
@@ -129,7 +163,9 @@ function AdminHome() {
               <Link to={`/products/${product.id}`}>
                 <button type="button">Details</button>
               </Link>
-              <button type="button">Add to cart</button>
+              <button type="button" onClick={() => handleAddToCart(product.id)}>
+                Add to cart
+              </button>
             </div>
           </div>
         ))}

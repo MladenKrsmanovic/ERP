@@ -3,7 +3,9 @@ const app=express();
 const cors=require("cors");
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:3001', // Replace with the actual origin of your frontend app
+  }))
 
 const db=require('./models');
 
@@ -30,7 +32,10 @@ const cartitemRouter=require('./routes/CartItem')
 app.use("/cartitems",cartitemRouter)
 
 const stripeRouter=require('./routes/Stripe')
-app.use("/stripe",stripeRouter)
+app.use("/str",stripeRouter)
+
+const webhookRouter=require('./routes/Webhook')
+app.use("/stripe",webhookRouter)
 
 
 db.sequelize.sync().then(()=>{

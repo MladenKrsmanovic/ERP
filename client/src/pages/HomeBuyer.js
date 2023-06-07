@@ -125,7 +125,9 @@ function HomeBuyer() {
           <Link to="/">
             <button type="button">Logout</button>
           </Link>
+          <Link to={`/login/buyers/${id}/cart`}>
           <button type="button">Cart</button>
+          </Link>
           <button type="button" onClick={handleProfileClick}>
             Profile
           </button>
@@ -141,7 +143,7 @@ function HomeBuyer() {
           <p>Name: {buyerData.name}</p>
           <p>Surname: {buyerData.surname}</p>
           <p>Email: {buyerData.email}</p>
-          <p>Is Admin: {buyerData.is_admin ? "Yes" : "No"}</p>
+          
           <button onClick={handleDeleteAccount}>Delete Account</button>
         </div>
       )}
